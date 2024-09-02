@@ -11,8 +11,6 @@ const BuyerSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    lowercase: true,
-    trim: true,
   },
   password: {
     type: String,
@@ -22,7 +20,6 @@ const BuyerSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    trim: true,
   },
   address: {
     street: { type: String, required: true },

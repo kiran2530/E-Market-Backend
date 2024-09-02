@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
 const vendorSchema = new mongoose.Schema({
-  businessName: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  ownerName: {
+  name: {
     type: String,
     required: true,
   },
@@ -19,9 +14,10 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  contactNumber: {
+  phone: {
     type: String,
     required: true,
+    unique: true,
   },
   address: {
     street: { type: String, required: true },
@@ -31,19 +27,9 @@ const vendorSchema = new mongoose.Schema({
     country: { type: String, required: true },
   },
   products: [ProductSchema], // Array of products managed by the vendor
-  businessDescription: {
-    type: String,
-  },
-  businessLogo: {
-    type: String, // URL or path to the business logo
-  },
   registrationDate: {
     type: Date,
     default: Date.now,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
   },
   ratings: {
     averageRating: { type: Number, default: 0 },
