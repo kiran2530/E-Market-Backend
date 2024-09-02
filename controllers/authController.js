@@ -1,5 +1,6 @@
 require("dotenv").config(); // Load environment variables from .env file
 const Buyer = require("../models/Buyer");
+const Vendor = require("../models/Vendor");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -21,7 +22,7 @@ exports.buyerRegister = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newBuyer = Buyer({
+    const newBuyer = new Buyer({
       name,
       email,
       password: hashedPassword,
@@ -74,3 +75,34 @@ exports.buyerLogin = async (req, res) => {
 };
 
 //Route 3 :  Route for vendor registration or signup
+
+exports.vendorRegister = async (req, res) => {
+  const { name, email, password, phone, address } = req.body;
+
+  try {
+    const existingVendor = await Vendor.findOne({ email });
+    if (existingVendor) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Vendor already exists" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newVendor = new Vendor({
+      name,
+      email,
+      password : hashedPassword,
+      phone,
+      address,
+    });
+
+    const saveVendor = await newVendor.save();
+    res
+      .status(201)
+      .json({ success: true, message: "Vendor register successfully" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

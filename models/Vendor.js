@@ -26,7 +26,7 @@ const vendorSchema = new mongoose.Schema({
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
   },
-  products: [ProductSchema], // Array of products managed by the vendor
+  // products: [ProductSchema], // Array of products managed by the vendor
   registrationDate: {
     type: Date,
     default: Date.now,
