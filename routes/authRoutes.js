@@ -8,6 +8,6 @@ router.post('/buyer/login', authController.buyerLogin);
 
 // Vendor Authentication Routes
 router.post('/vendor/register', authController.vendorRegister);
-// router.post('/vendor/login', authController.vendorLogin);
+router.post('/vendor/login', authController.vendorLogin);
 
 module.exports = router;

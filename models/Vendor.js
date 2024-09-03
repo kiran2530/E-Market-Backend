@@ -26,7 +26,7 @@ const vendorSchema = new mongoose.Schema({
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
   },
-  products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   registrationDate: {
     type: Date,
     default: Date.now,
