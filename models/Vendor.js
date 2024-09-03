@@ -26,7 +26,7 @@ const vendorSchema = new mongoose.Schema({
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
   },
-  // products: [ProductSchema], // Array of products managed by the vendor
+  products: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   registrationDate: {
     type: Date,
     default: Date.now,
@@ -43,6 +43,6 @@ const vendorSchema = new mongoose.Schema({
   },
 });
 
-const vendorModel = mongoose.model("vendors", vendorSchema)
+const vendorModel = mongoose.model("vendors", vendorSchema);
 
 module.exports = vendorModel;
