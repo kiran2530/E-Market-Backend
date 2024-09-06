@@ -31,6 +31,11 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  vendorId: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Vendor",
+  },
   dateAdded: {
     type: Date,
     default: Date.now,

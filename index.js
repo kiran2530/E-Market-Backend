@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/product", authRoutes);
+app.use("/api/product", productRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {
