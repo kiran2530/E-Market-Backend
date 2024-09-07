@@ -3,9 +3,11 @@ require("dotenv").config(); // Load environment variables from .env file
 
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+
 const connectToMongo = require("./config/Database");
 const authRoutes = require("./routes/authRoutes");
-const productRoutes = require('./routes/productRoutes')
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -15,6 +17,7 @@ connectToMongo();
 // Middleware setup
 app.use(cors()); // This will enable CORS for all routes
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);

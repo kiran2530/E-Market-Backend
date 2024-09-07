@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const cloudinary = require("../config/cloudinaryConfig");
 
 // Create a new product (Vendor only)
 exports.createProduct = async (req, res) => {
@@ -6,6 +7,11 @@ exports.createProduct = async (req, res) => {
     req.body;
 
   try {
+    // Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "emarketproducts",
+    });
+
     const newProduct = new Product({
       name,
       description,
@@ -15,12 +21,17 @@ exports.createProduct = async (req, res) => {
       subCategory,
       status,
       vendorId: req.vendorId,
+      image: {
+        imageUrl: result.secure_url,
+        public_id: result.public_id,
+      },
     });
     await newProduct.save();
 
     res.status(201).json({
       success: true,
       message: "Product save Successfully",
+      newProduct: newProduct,
     });
   } catch (err) {
     res.status(500).json({
@@ -36,9 +47,38 @@ exports.updateProduct = async (req, res) => {
   const updates = req.body;
 
   try {
+    const product = await Product.findOne({
+      _id: productId,
+      vendorId: req.vendorId,
+    });
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: "Product not found Or you are not allow to update" });
+    }
+
+    if (req.file) {
+      // Delete the old image from Cloudinary
+      if (product.image.public_id) {
+        await cloudinary.uploader.destroy(product.image.public_id);
+      }
+
+      // Upload the new image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "emarketproducts",
+      });
+
+      // Update the product image URL and image public ID
+      updates.image = {
+        imageUrl: result.secure_url,
+        public_id: result.public_id,
+      };
+    }
+
     const updateProduct = await Product.findOneAndUpdate(
       { _id: productId, vendorId: req.vendorId },
-      updates,
+      { $set: updates },
       { new: true }
     );
 
@@ -51,6 +91,7 @@ exports.updateProduct = async (req, res) => {
     res.status(201).json({
       success: true,
       message: "Product update Successfully",
+      updateProduct,
     });
   } catch (err) {
     res.status(500).json({
