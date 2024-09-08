@@ -1,40 +1,16 @@
-require("dotenv").config(); // Load environment variables from .env file
-const Buyer = require("../models/Buyer");
-const Vendor = require("../models/Vendor");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const buyerService = require("../services/buyerService");
+const vendorService = require("../services/vendorService");
 
 //Route 1 :  Route for buyer registration or signup
 
 exports.buyerRegister = async (req, res) => {
-  const { name, email, password, phone, address } = req.body;
-
   try {
-    const existingBuyer = await Buyer.findOne({ email: email });
+    const result = await buyerService.registerBuyer(req.body);
 
-    if (existingBuyer) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Buyer already exists" });
+    if (!result.success) {
+      return res.status(400).json(result);
     }
-
-    //  If buyer not exist then generate salt and hash the password using the bcriptjs and create new buyer and store into database
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newBuyer = new Buyer({
-      name,
-      email,
-      password: hashedPassword,
-      phone,
-      address,
-    });
-
-    const saveBuyer = await newBuyer.save();
-
-    res
-      .status(201)
-      .json({ success: true, message: "Buyer register successfully" });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -43,32 +19,13 @@ exports.buyerRegister = async (req, res) => {
 //Route 2 :  Route for buyer login which Authenticates a buyer and returns a JWT token
 
 exports.buyerLogin = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const buyer = await Buyer.findOne({ email });
+    const result = await buyerService.loginBuyer(req.body);
 
-    if (!buyer) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+    if (!result.success) {
+      return res.status(400).json(result);
     }
-
-    const passwordCompare = await bcrypt.compare(password, buyer.password);
-
-    if (!passwordCompare) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
-    }
-
-    // Returns a JWT token
-    const data = {
-      buyerId: buyer._id,
-    };
-
-    const authToken = jwt.sign(data, process.env.JWT_SECRET);
-    res.json({ authToken: authToken, role: "buyer" });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -77,31 +34,13 @@ exports.buyerLogin = async (req, res) => {
 //Route 3 :  Route for vendor registration or signup
 
 exports.vendorRegister = async (req, res) => {
-  const { name, email, password, phone, address } = req.body;
-
   try {
-    const existingVendor = await Vendor.findOne({ email });
-    if (existingVendor) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Vendor already exists" });
+    const result = await vendorService.registerVendor(req.body);
+
+    if (!result.success) {
+      return res.status(400).json(result);
     }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const newVendor = new Vendor({
-      name,
-      email,
-      password: hashedPassword,
-      phone,
-      address,
-    });
-
-    const saveVendor = await newVendor.save();
-    res
-      .status(201)
-      .json({ success: true, message: "Vendor register successfully" });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -110,32 +49,13 @@ exports.vendorRegister = async (req, res) => {
 //Route 4 :  Route for Vendors login which Authenticates a vendors and returns a JWT token
 
 exports.vendorLogin = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    const vendor = await Vendor.findOne({ email });
+    const result = await vendorService.loginVendor(req.body);
 
-    if (!vendor) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
+    if (!result.success) {
+      return res.status(400).json(result);
     }
-
-    const passwordCompare = await bcrypt.compare(password, vendor.password);
-
-    if (!passwordCompare) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid credentials" });
-    }
-
-    // Returns a JWT token
-    const data = {
-      vendorId: vendor._id,
-    };
-
-    const authToken = jwt.sign(data, process.env.JWT_SECRET);
-    res.json({ authToken: authToken, role: "vendor" });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: "Server error" });
   }
