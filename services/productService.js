@@ -36,10 +36,7 @@ const updateExistingProduct = async (productId, updates, file, vendorId) => {
   );
 
   if (!product) {
-    return {
-      success: false,
-      message: "Product not found Or you are not allow to update",
-    };
+    throw new Error("Product not found Or you are not allow to update");
   }
 
   if (file) {
