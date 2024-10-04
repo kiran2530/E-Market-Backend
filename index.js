@@ -20,11 +20,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use("/", (req, res) => {
-  return res.json({
-    massage: "Welcome to E-market",
-  });
-});
+// app.use("/", (req, res) => {
+//   return res.json({
+//     massage: "Welcome to E-market",
+//   });
+// });
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 
