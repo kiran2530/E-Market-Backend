@@ -30,6 +30,12 @@ router.delete(
   productController.deleteProduct
 );
 
+router.get(
+  "/vendor/getProducts",
+  authMiddleware.verifyVendorToken,
+  productController.getProductByVendorId
+);
+
 // Routes for buyers
 router.get("/buyer/products", productController.getAllProducts);
 router.get("/buyer/product/:productId", productController.getProductById);

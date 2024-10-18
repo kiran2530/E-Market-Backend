@@ -8,6 +8,10 @@ const findProductById = async (productId) => {
   return await Product.findById(productId);
 };
 
+const findProductByVendorId = async (vendorId) => {
+  return await Product.find({ vendorId: vendorId });
+};
+
 const findProductByVendor = async (productId, vendorId) => {
   return await Product.findOne({ _id: productId, vendorId: vendorId });
 };
@@ -36,4 +40,5 @@ module.exports = {
   findProductByVendor,
   updateProduct,
   deleteProduct,
+  findProductByVendorId,
 };

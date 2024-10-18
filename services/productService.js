@@ -14,6 +14,10 @@ const getProductById = async (productId) => {
   return await productRepository.findProductById(productId);
 };
 
+const getProductByVendorId = async (vendorId) => {
+  return await productRepository.findProductByVendorId(vendorId);
+};
+
 // create new product
 const createNewProduct = async (productData, file, vendorId) => {
   // Upload image to Cloudinary
@@ -77,4 +81,5 @@ module.exports = {
   createNewProduct,
   updateExistingProduct,
   deleteExistingProduct,
+  getProductByVendorId,
 };

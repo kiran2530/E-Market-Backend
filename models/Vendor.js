@@ -20,11 +20,8 @@ const vendorSchema = new mongoose.Schema({
     unique: true,
   },
   address: {
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    postalCode: { type: String, required: true },
-    country: { type: String, required: true },
+    type: String,
+    required: true,
   },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   registrationDate: {

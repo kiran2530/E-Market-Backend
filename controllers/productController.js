@@ -105,3 +105,25 @@ exports.getProductById = async (req, res) => {
     });
   }
 };
+
+// Route 6 : Get a product by vendor ID (vendor)
+exports.getProductByVendorId = async (req, res) => {
+  const vendorId = req.vendorId;
+  try {
+    const product = await productService.getProductByVendorId(vendorId);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    res.status(201).json({ success: true, product });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Server error",
+    });
+  }
+};
