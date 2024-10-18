@@ -41,6 +41,18 @@ const productSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Vendor",
   },
+  country: {
+    type: String,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
   dateAdded: {
     type: Date,
     default: Date.now,
