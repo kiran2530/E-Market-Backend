@@ -71,7 +71,12 @@ const loginVendor = async (vendorData) => {
   return { success: true, authToken: authToken, role: "vendor" };
 };
 
+const getVendorById = async (vendorId) => {
+  return await vendorRepository.findVendorById(vendorId);
+};
+
 module.exports = {
   registerVendor,
   loginVendor,
+  getVendorById,
 };

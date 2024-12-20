@@ -60,3 +60,18 @@ exports.vendorLogin = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+exports.getLoggedInVendorDetails = async (req, res) => {
+  try {
+    const vendorId = req.vendorId;
+    const vendorDetails = await vendorService.getVendorById(vendorId);
+    if (!vendorDetails) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
+    }
+    res.status(200).json({ success: true, vendorDetails });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

@@ -13,8 +13,13 @@ const findVendorByPhone = async (phone) => {
   return await Vendor.findOne({ phone });
 };
 
+const findVendorById = async (vendorId) => {
+  return await Vendor.findById(vendorId).select("-password");
+};
+
 module.exports = {
   createVendor,
   findVendorByEmail,
   findVendorByPhone,
+  findVendorById,
 };
