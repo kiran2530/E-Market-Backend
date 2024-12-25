@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Vendor = require("../models/Vendor");
 
 const findAllProduct = async () => {
   return await Product.find();
@@ -18,7 +19,14 @@ const findProductByVendor = async (productId, vendorId) => {
 
 const createProduct = async (productData) => {
   const newProduct = new Product(productData);
-  return await newProduct.save();
+  const savedProduct = await newProduct.save();
+
+  await Vendor.findByIdAndUpdate(
+    productData.vendorId,
+    { $push: { products: savedProduct._id } },
+    { new: true }
+  );
+  return savedProduct;
 };
 
 const updateProduct = async (productId, vendorId, updates) => {
