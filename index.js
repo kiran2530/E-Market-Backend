@@ -11,11 +11,17 @@ const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
+const corsOptions = {
+  origin: "https://e-market-frontend.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "authToken"],
+};
+
 // connect to Database..
 connectToMongo();
 
 // Middleware setup
-app.use(cors()); // This will enable CORS for all routes
+app.use(cors(corsOptions)); // This will enable CORS for all routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
