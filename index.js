@@ -12,7 +12,7 @@ const productRoutes = require("./routes/productRoutes");
 const app = express();
 
 const corsOptions = {
-  origin: "https://e-market-frontend.onrender.com",
+  origin: ["https://e-market-frontend.onrender.com", "http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "authToken"],
 };
