@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const connectToMongo = require("./config/Database");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 // });
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {
