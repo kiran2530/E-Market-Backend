@@ -9,6 +9,7 @@ const connectToMongo = require("./config/Database");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const buyerRoutes = require("./routes/buyerRoutes");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/cart", buyerRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {

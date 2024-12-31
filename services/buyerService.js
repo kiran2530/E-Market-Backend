@@ -67,7 +67,34 @@ const loginBuyer = async (buyerData) => {
   return { success: true, authToken: authToken, role: "buyer" };
 };
 
+const addToCart = async (buyerId, productId, quantity) => {
+  if (quantity <= 0) {
+    throw new Error("Quantity must be at least 1");
+  }
+  return await buyerRepository.addToCart(buyerId, productId, quantity);
+};
+
+const removeFromCart = async (buyerId, productId) => {
+  return await buyerRepository.removeFromCart(buyerId, productId);
+};
+
+// Service to fetch cart items for a buyer
+const getCartItems = async (buyerId) => {
+  try {
+    console.log("buyerid: ", buyerId);
+    // Call the repository to get the cart items
+    const buyerCart = await buyerRepository.getBuyerCart(buyerId);
+    return buyerCart;
+  } catch (error) {
+    console.error("Error in buyerService.getCartItems:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   registerBuyer,
   loginBuyer,
+  addToCart,
+  removeFromCart,
+  getCartItems,
 };

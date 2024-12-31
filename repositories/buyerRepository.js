@@ -1,4 +1,6 @@
 const Buyer = require("../models/Buyer");
+const mongoose = require("mongoose");
+const productModel = require("../models/Product");
 
 const findBuyerByEmail = async (email) => {
   return await Buyer.findOne({ email });
@@ -17,8 +19,105 @@ const createBuyer = async (buyerData) => {
   return await buyer.save();
 };
 
+const addToCart = async (buyerId, productId, quantity) => {
+  let buyer = await Buyer.findById(buyerId);
+  if (!buyer) {
+    console.log("buyer not found");
+    throw new Error("Buyer not found");
+  }
+
+  const product = await productModel.findById(productId);
+  if (!product) {
+    console.log("buyer not found");
+    throw new Error("Buyer not found");
+  }
+
+  const existingItemIndex = buyer.cart.items.findIndex(
+    (item) => item.productId.toString() === productId
+  );
+
+  if (existingItemIndex >= 0) {
+    // If the product is already in the cart, increment the quantity
+    const updatedBuyer = await Buyer.findByIdAndUpdate(
+      buyerId,
+      {
+        $set: {
+          [`cart.items.${existingItemIndex}.quantity`]:
+            buyer.cart.items[existingItemIndex].quantity + quantity,
+        },
+      },
+      { new: true } // Return the updated document
+    );
+    return { message: "Quantity updated in cart", cart: updatedBuyer.cart };
+  } else {
+    // Find the buyer and update the cart using Mongoose's findByIdAndUpdate method
+    const updatedBuyer = await Buyer.findByIdAndUpdate(
+      buyerId,
+      {
+        $push: {
+          "cart.items": {
+            productId,
+            quantity,
+          },
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedBuyer) {
+      return { message: "Buyer not found" };
+    }
+  }
+
+  return { message: "Item added to cart", cart: buyer.cart };
+};
+
+const removeFromCart = async (buyerId, productId) => {
+  const buyer = await Buyer.findById(buyerId);
+  if (!buyer) {
+    throw new Error("Buyer not found");
+  }
+
+  buyer.cart.items = buyer.cart.items.filter(
+    (item) => item.productId.toString() !== productId
+  );
+
+  await buyer.save();
+  return { message: "Item removed from cart", cart: buyer.cart };
+};
+
+// Repository function to fetch a buyer's cart items with product details
+const getBuyerCart = async (buyerId) => {
+  try {
+    // Find buyer by ID and populate the product details in cart items
+    console.log("buyerid: ", buyerId);
+
+    const buyer1 = await Buyer.findById(buyerId);
+    // console.log(buyer1);
+    console.log(mongoose.modelNames()); // Check if the Product model is listed
+
+    const buyer = await Buyer.findById(buyerId).populate(
+      "cart.items.productId",
+      "name price priceCategory description image.imageUrl"
+    );
+    console.log(buyer);
+
+    if (!buyer) {
+      return null; // Return null if the buyer is not found
+    }
+
+    return buyer.cart.items; // Return the populated cart items
+  } catch (error) {
+    console.error("Error in buyerRepository.getBuyerCart:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   findBuyerByEmail,
   findBuyerByPhone,
   createBuyer,
+  addToCart,
+  removeFromCart,
+  getBuyerCart,
 };
