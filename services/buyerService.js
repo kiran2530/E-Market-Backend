@@ -81,7 +81,6 @@ const removeFromCart = async (buyerId, productId) => {
 // Service to fetch cart items for a buyer
 const getCartItems = async (buyerId) => {
   try {
-    console.log("buyerid: ", buyerId);
     // Call the repository to get the cart items
     const buyerCart = await buyerRepository.getBuyerCart(buyerId);
     return buyerCart;

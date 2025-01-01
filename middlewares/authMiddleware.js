@@ -30,7 +30,6 @@ exports.verifyBuyerToken = (req, res, next) => {
   try {
     const verifyToken = jwt.verify(authToken, process.env.JWT_SECRET);
     req.buyerId = verifyToken.buyerId;
-    console.log(req.buyerId);
 
     next();
   } catch (err) {

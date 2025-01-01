@@ -9,9 +9,7 @@ const findBuyerByEmail = async (email) => {
 const findBuyerByPhone = async (phone) => {
   try {
     return await Buyer.findOne({ phone });
-  } catch (err) {
-    // console.log(err);
-  }
+  } catch (err) {}
 };
 
 const createBuyer = async (buyerData) => {
@@ -22,13 +20,11 @@ const createBuyer = async (buyerData) => {
 const addToCart = async (buyerId, productId, quantity) => {
   let buyer = await Buyer.findById(buyerId);
   if (!buyer) {
-    console.log("buyer not found");
     throw new Error("Buyer not found");
   }
 
   const product = await productModel.findById(productId);
   if (!product) {
-    console.log("buyer not found");
     throw new Error("Buyer not found");
   }
 
@@ -48,7 +44,7 @@ const addToCart = async (buyerId, productId, quantity) => {
       },
       { new: true } // Return the updated document
     );
-    return { message: "Quantity updated in cart", cart: updatedBuyer.cart };
+    return { message: "Product is allready in cart hence, Quantity updated in cart", cart: updatedBuyer.cart };
   } else {
     // Find the buyer and update the cart using Mongoose's findByIdAndUpdate method
     const updatedBuyer = await Buyer.findByIdAndUpdate(
@@ -90,17 +86,12 @@ const removeFromCart = async (buyerId, productId) => {
 const getBuyerCart = async (buyerId) => {
   try {
     // Find buyer by ID and populate the product details in cart items
-    console.log("buyerid: ", buyerId);
-
     const buyer1 = await Buyer.findById(buyerId);
-    // console.log(buyer1);
-    console.log(mongoose.modelNames()); // Check if the Product model is listed
 
     const buyer = await Buyer.findById(buyerId).populate(
       "cart.items.productId",
       "name price priceCategory description image.imageUrl"
     );
-    console.log(buyer);
 
     if (!buyer) {
       return null; // Return null if the buyer is not found
