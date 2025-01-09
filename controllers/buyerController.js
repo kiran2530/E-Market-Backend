@@ -24,7 +24,7 @@ exports.removeFromCart = async (req, res) => {
 
 // Controller to handle the request for fetching cart items
 exports.getCart = async (req, res) => {
-  const buyerId = await req.buyerId;
+  const buyerId = req.buyerId;
   try {
     // Call the service to fetch cart items
     const cartItems = await buyerService.getCartItems(buyerId);

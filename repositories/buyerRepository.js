@@ -44,7 +44,11 @@ const addToCart = async (buyerId, productId, quantity) => {
       },
       { new: true } // Return the updated document
     );
-    return { message: "Product is allready in cart hence, Quantity updated in cart", cart: updatedBuyer.cart };
+    return {
+      success: true,
+      message: "Product quantity updated",
+      cart: updatedBuyer.cart,
+    };
   } else {
     // Find the buyer and update the cart using Mongoose's findByIdAndUpdate method
     const updatedBuyer = await Buyer.findByIdAndUpdate(
@@ -61,11 +65,11 @@ const addToCart = async (buyerId, productId, quantity) => {
     );
 
     if (!updatedBuyer) {
-      return { message: "Buyer not found" };
+      return { success: false, message: "Buyer not found" };
     }
   }
 
-  return { message: "Item added to cart", cart: buyer.cart };
+  return { success: true, message: "Item added to cart", cart: buyer.cart };
 };
 
 const removeFromCart = async (buyerId, productId) => {
@@ -79,7 +83,7 @@ const removeFromCart = async (buyerId, productId) => {
   );
 
   await buyer.save();
-  return { message: "Item removed from cart", cart: buyer.cart };
+  return { success: true, message: "Item removed from cart", cart: buyer.cart };
 };
 
 // Repository function to fetch a buyer's cart items with product details

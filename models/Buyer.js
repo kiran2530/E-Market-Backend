@@ -50,6 +50,12 @@ const BuyerSchema = new Schema({
       },
     },
   ],
+  wishlist: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

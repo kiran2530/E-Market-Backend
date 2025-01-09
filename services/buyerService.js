@@ -68,8 +68,8 @@ const loginBuyer = async (buyerData) => {
 };
 
 const addToCart = async (buyerId, productId, quantity) => {
-  if (quantity <= 0) {
-    throw new Error("Quantity must be at least 1");
+  if (quantity == 0) {
+    return { success: false, message: "Quantity must be at least 1" };
   }
   return await buyerRepository.addToCart(buyerId, productId, quantity);
 };
@@ -86,7 +86,6 @@ const getCartItems = async (buyerId) => {
     return buyerCart;
   } catch (error) {
     console.error("Error in buyerService.getCartItems:", error);
-    throw error;
   }
 };
 
