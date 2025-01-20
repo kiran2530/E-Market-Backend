@@ -90,8 +90,6 @@ const removeFromCart = async (buyerId, productId) => {
 const getBuyerCart = async (buyerId) => {
   try {
     // Find buyer by ID and populate the product details in cart items
-    const buyer1 = await Buyer.findById(buyerId);
-
     const buyer = await Buyer.findById(buyerId).populate(
       "cart.items.productId",
       "name price priceCategory description image.imageUrl"
@@ -108,6 +106,10 @@ const getBuyerCart = async (buyerId) => {
   }
 };
 
+const findById = async (buyerId) => {
+  return await Buyer.findById(buyerId).select("-password"); // Exclude the password field
+};
+
 module.exports = {
   findBuyerByEmail,
   findBuyerByPhone,
@@ -115,4 +117,5 @@ module.exports = {
   addToCart,
   removeFromCart,
   getBuyerCart,
+  findById,
 };

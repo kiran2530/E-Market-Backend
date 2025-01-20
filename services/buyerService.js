@@ -89,10 +89,15 @@ const getCartItems = async (buyerId) => {
   }
 };
 
+const getBuyerById = async (buyerId) => {
+  return await buyerRepository.findById(buyerId); // Fetch user data by ID
+};
+
 module.exports = {
   registerBuyer,
   loginBuyer,
   addToCart,
   removeFromCart,
   getCartItems,
+  getBuyerById,
 };

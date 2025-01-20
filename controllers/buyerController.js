@@ -42,3 +42,20 @@ exports.getCart = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+exports.getUserInfo = async (req, res) => {
+  try {
+    const buyerId = req.buyerId; // Extract user ID from JWT payload
+    const userInfo = await buyerService.getBuyerById(buyerId);
+
+    if (!userInfo) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json(userInfo);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
