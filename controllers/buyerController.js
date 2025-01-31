@@ -59,3 +59,25 @@ exports.getUserInfo = async (req, res) => {
       .json({ message: "Server error", error: error.message });
   }
 };
+
+exports.resateBuyerPassword = async (req, res) => {
+  const { email, newPassword } = req.body; // Only update email
+
+  try {
+    const updatedUser = await buyerService.resateBuyerPassword(
+      email,
+      newPassword
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Buyer not found" });
+    }
+
+    res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

@@ -93,6 +93,21 @@ const getBuyerById = async (buyerId) => {
   return await buyerRepository.findById(buyerId); // Fetch user data by ID
 };
 
+const resateBuyerPassword = async (email, newPassword) => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    const updatedUser = await buyerRepository.resateBuyerPassword(
+      email,
+      hashedPassword
+    );
+    return updatedUser;
+  } catch (error) {
+    throw new Error("Error in service layer: " + error.message);
+  }
+};
+
 module.exports = {
   registerBuyer,
   loginBuyer,
@@ -100,4 +115,5 @@ module.exports = {
   removeFromCart,
   getCartItems,
   getBuyerById,
+  resateBuyerPassword,
 };

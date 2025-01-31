@@ -3,7 +3,7 @@ const {
   addToCart,
   removeFromCart,
   getCart,
-  getUserInfo
+  getUserInfo,
 } = require("../controllers/buyerController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -17,6 +17,7 @@ router.post("/remove", authMiddleware.verifyBuyerToken, removeFromCart);
 
 router.get("/items", authMiddleware.verifyBuyerToken, getCart);
 
-router.get('/info', authMiddleware.verifyBuyerToken, getUserInfo);
+router.get("/info", authMiddleware.verifyBuyerToken, getUserInfo);
+
 
 module.exports = router;

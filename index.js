@@ -10,7 +10,8 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const buyerRoutes = require("./routes/buyerRoutes");
-const wishlistrotes = require("./routes/wishlistRoutes")
+const wishlistrotes = require("./routes/wishlistRoutes");
+const forgotPasswordRoutes = require("./routes/forgotPasswordRoutes");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/product", productRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/cart", buyerRoutes);
 app.use("/api/wishlist", wishlistrotes);
+app.use("/api/forgotPass", forgotPasswordRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {
