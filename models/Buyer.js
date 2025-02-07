@@ -60,6 +60,8 @@ const BuyerSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  otp: { type: String },
+  otpExpire: { type: Date },
 });
 
 module.exports = mongoose.model("Buyer", BuyerSchema);

@@ -75,8 +75,24 @@ const getVendorById = async (vendorId) => {
   return await vendorRepository.findVendorById(vendorId);
 };
 
+const resetVendorPassword = async (email, newPassword) => {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    const updatedUser = await vendorRepository.resetVendorPassword(
+      email,
+      hashedPassword
+    );
+    return updatedUser;
+  } catch (error) {
+    throw new Error("Error in service layer: " + error.message);
+  }
+};
+
 module.exports = {
   registerVendor,
   loginVendor,
   getVendorById,
+  resetVendorPassword,
 };

@@ -75,3 +75,25 @@ exports.getLoggedInVendorDetails = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+exports.resetVendorPassword = async (req, res) => {
+  const { email, newPassword } = req.body; // Only update email
+
+  try {
+    const updatedUser = await vendorService.resetVendorPassword(
+      email,
+      newPassword
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Vendor not found" });
+    }
+
+    res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

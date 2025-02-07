@@ -38,6 +38,8 @@ const vendorSchema = new mongoose.Schema({
     ifscCode: { type: String },
     upiId: { type: String },
   },
+  otp: { type: String },
+  otpExpire: { type: Date },
 });
 
 const vendorModel = mongoose.model("Vendor", vendorSchema);

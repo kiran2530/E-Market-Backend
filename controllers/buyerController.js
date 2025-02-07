@@ -60,11 +60,11 @@ exports.getUserInfo = async (req, res) => {
   }
 };
 
-exports.resateBuyerPassword = async (req, res) => {
+exports.resetBuyerPassword = async (req, res) => {
   const { email, newPassword } = req.body; // Only update email
 
   try {
-    const updatedUser = await buyerService.resateBuyerPassword(
+    const updatedUser = await buyerService.resetBuyerPassword(
       email,
       newPassword
     );

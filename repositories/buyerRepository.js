@@ -110,7 +110,7 @@ const findById = async (buyerId) => {
   return await Buyer.findById(buyerId).select("-password"); // Exclude the password field
 };
 
-const resateBuyerPassword = async (email, newPassword) => {
+const resetBuyerPassword = async (email, newPassword) => {
   try {
     return await Buyer.findOneAndUpdate(
       { email: email },
@@ -130,5 +130,5 @@ module.exports = {
   removeFromCart,
   getBuyerCart,
   findById,
-  resateBuyerPassword,
+  resetBuyerPassword,
 };

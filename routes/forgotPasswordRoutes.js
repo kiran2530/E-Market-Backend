@@ -3,9 +3,10 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const Buyer = require("../models/Buyer");
-const { resateBuyerPassword } = require("../controllers/buyerController");
+const Vendor = require("../models/Vendor");
+const { resetBuyerPassword } = require("../controllers/buyerController");
 
-let otpStorage = {}; // In-memory storage for OTPs (use a database in production)
+const authController = require("../controllers/authController");
 
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
@@ -21,9 +22,12 @@ const router = express.Router();
 // route for send otp
 
 router.post("/send-otp", async (req, res) => {
-  const { email } = req.body;
+  const { email, role } = req.body;
+  let existing;
+  console.log(role);
 
-  const existing = await Buyer.findOne({ email: email });
+  if (role === "buyer") existing = await Buyer.findOne({ email: email });
+  if (role === "vendor") existing = await Vendor.findOne({ email: email });
 
   if (!existing) {
     return res.status(201).json({
@@ -33,9 +37,7 @@ router.post("/send-otp", async (req, res) => {
   }
   // Generate a 6-digit OTP
   const otp = crypto.randomInt(100000, 999999);
-
-  // Save OTP with a short expiry (e.g., 5 minutes)
-  otpStorage[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+  const otpExpire = new Date(Date.now() + 5 * 60 * 1000);
 
   // Send OTP via email
   try {
@@ -82,7 +84,15 @@ router.post("/send-otp", async (req, res) => {
       `,
     });
 
-    res.json({ success: true, message: "OTP sent successfully." });
+    existing.otp = otp;
+    existing.otpExpire = otpExpire;
+
+    const result = await existing.save();
+    res.json({
+      success: true,
+      message: "OTP sent successfully.",
+      existing: result,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Failed to send OTP." });
@@ -93,7 +103,9 @@ router.post("/send-otp", async (req, res) => {
 
 router.post("/validate-otp", async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { email, otp, role } = req.body;
+
+    let existing;
 
     if (!email || !otp) {
       return res
@@ -101,21 +113,26 @@ router.post("/validate-otp", async (req, res) => {
         .json({ success: false, message: "Email and OTP are required." });
     }
 
-    const storedOtp = otpStorage[email];
+    if (role === "buyer") existing = await Buyer.findOne({ email: email });
+    if (role === "vendor") existing = await Vendor.findOne({ email: email });
+
+    if (!existing) {
+      return res.status(201).json({
+        success: false,
+        message: "User not exit with this email address",
+      });
+    }
 
     // Validate OTP
     if (
-      !storedOtp ||
-      storedOtp.otp !== parseInt(otp) ||
-      Date.now() > storedOtp.expires
+      !existing.otp ||
+      existing.otp !== otp ||
+      Date.now() > existing.otpExpire
     ) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid or expired OTP." });
     }
-
-    // Clear OTP from storage after successful validation
-    delete otpStorage[email];
 
     return res.status(200).json({ success: true, message: "OTP Verified" });
   } catch (error) {
@@ -128,6 +145,8 @@ router.post("/validate-otp", async (req, res) => {
   }
 });
 
-router.put("/resate-buyer-password", resateBuyerPassword);
+router.put("/reset-buyer-password", resetBuyerPassword);
+
+router.put("/reset-vendor-password", authController.resetVendorPassword);
 
 module.exports = router;

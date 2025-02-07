@@ -12,6 +12,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const buyerRoutes = require("./routes/buyerRoutes");
 const wishlistrotes = require("./routes/wishlistRoutes");
 const forgotPasswordRoutes = require("./routes/forgotPasswordRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/cart", buyerRoutes);
 app.use("/api/wishlist", wishlistrotes);
 app.use("/api/forgotPass", forgotPasswordRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {
