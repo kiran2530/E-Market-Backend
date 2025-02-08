@@ -38,6 +38,7 @@ exports.paymentSuccess = async (req, res) => {
     const paymentData = req.body;
 
     paymentData.buyerId = req.buyerId;
+    
 
     const isValid = await verifyPayment(paymentData);
     if (!isValid) {

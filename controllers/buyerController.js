@@ -4,6 +4,8 @@ exports.addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
     const buyerId = req.buyerId;
+    console.log(typeof req.buyerId);
+
     const result = await buyerService.addToCart(buyerId, productId, quantity);
     res.status(200).json(result);
   } catch (error) {
