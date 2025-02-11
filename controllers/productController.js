@@ -3,6 +3,13 @@ const productService = require("../services/productService");
 //Route 1 : Create a new product (Vendor only)
 exports.createProduct = async (req, res) => {
   try {
+    // Parse finalPayout if it exists in the request body
+    if (req.body.finalPayout) {
+      req.body.finalPayout = JSON.parse(req.body.finalPayout);
+    }
+
+    console.log(req.body);
+
     const newProduct = await productService.createNewProduct(
       req.body,
       req.file,

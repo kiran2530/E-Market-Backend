@@ -61,6 +61,8 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  finalPayout: { type: Object },
+  discount: { type: Number },
   dateAdded: {
     type: Date,
     default: Date.now,
