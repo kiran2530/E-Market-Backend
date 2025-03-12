@@ -12,7 +12,6 @@ exports.buyNow = async (req, res) => {
 
     if (
       !orderData.buyerId ||
-      !orderData.vendorId ||
       !orderData.products ||
       !orderData.totalAmount ||
       !orderData.shippingAddress
@@ -46,7 +45,6 @@ exports.paymentSuccess = async (req, res) => {
     }
 
     const newOrder = await createOrder({
-      vendorId: paymentData.vendorId,
       buyerId: paymentData.buyerId,
       products: paymentData.products,
       totalAmount: paymentData.totalAmount,

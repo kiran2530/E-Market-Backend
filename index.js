@@ -14,6 +14,7 @@ const wishlistrotes = require("./routes/wishlistRoutes");
 const forgotPasswordRoutes = require("./routes/forgotPasswordRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const authMiddleware = require("./middlewares/authMiddleware");
+const orderRoutes = require("./routes/orderRoutes");
 
 const Order = require("./models/Order");
 
@@ -46,23 +47,7 @@ app.use("/api/cart", buyerRoutes);
 app.use("/api/wishlist", wishlistrotes);
 app.use("/api/forgotPass", forgotPasswordRoutes);
 app.use("/api/payment", paymentRoutes);
-
-app.post("/api/orders", authMiddleware.verifyBuyerToken, async (req, res) => {
-  try {
-    const buyerId = req.buyerId;
-    console.log(typeof req.buyerId);
-
-    const orders = await Order.find({ buyerId })
-      .populate("products.productId", "name image.imageUrl") // Fetch product details
-      .populate("vendorId", "name email"); // Fetch vendor details
-
-    console.log(orders);
-
-    res.json(orders);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch orders" });
-  }
-});
+app.use("/api/orders", orderRoutes);
 
 // Start server
 app.listen(process.env.PORT, () => {

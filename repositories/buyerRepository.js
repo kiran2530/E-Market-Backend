@@ -92,7 +92,7 @@ const getBuyerCart = async (buyerId) => {
     // Find buyer by ID and populate the product details in cart items
     const buyer = await Buyer.findById(buyerId).populate(
       "cart.items.productId",
-      "name price priceCategory description image.imageUrl"
+      "name price priceCategory description image.imageUrl vendorId"
     );
 
     if (!buyer) {
