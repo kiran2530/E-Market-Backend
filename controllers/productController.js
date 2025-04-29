@@ -8,7 +8,8 @@ exports.createProduct = async (req, res) => {
       req.body.finalPayout = JSON.parse(req.body.finalPayout);
     }
 
-    console.log(req.body);
+    req.body.name = req.body.name.toLowerCase();
+    console.log(req.body.name);
 
     const newProduct = await productService.createNewProduct(
       req.body,
